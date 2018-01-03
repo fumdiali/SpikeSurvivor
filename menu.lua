@@ -4,6 +4,9 @@ local widget = require( "widget" )
 local scene = composer.newScene()
 
 
+local function gameLevels()
+    composer.gotoScene( "gamelevels" )
+end 
 
 
 
@@ -40,17 +43,16 @@ function scene:create( event )
    spike.x = display.contentCenterX
    spike.y = 350
   
-   local levelScreen
 
    -- Create the widget
 local level = widget.newButton(
     {
-        label = "LEVELS",
+        label = "GAME LEVELS",
         --onEvent = handleButtonEvent,
         emboss = false,
         -- Properties for a rounded rectangle button
         shape = "roundedRect",
-        width = 180,
+        width = 190,
         height = 40,
         cornerRadius = 20,
         fillColor = { default={0,0,1,0.5}, over={1,0.1,0.7,0.4} },
@@ -61,11 +63,9 @@ local level = widget.newButton(
 level.x = display.contentCenterX
 level.y = 390
 
-levelScreen = function()
-    composer.gotoScene( "levels", { time=800, effect="crossFade" } )
-end 
 
-level:addEventListener( "tap", levelScreen)  
+
+level:addEventListener( "tap", gameLevels)  
 
 end--end of create scene
 
