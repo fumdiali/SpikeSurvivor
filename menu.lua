@@ -4,17 +4,7 @@ local widget = require( "widget" )
 local scene = composer.newScene()
 
 
-local function easyLevel()
-   composer.gotoScene( "easy", { time=800, effect="crossFade" } )
-end
 
-local function difficultLevel()
-    composer.gotoScene( "difficult", { time=800, effect="crossFade" } )
- end
-
- local function aboutGame()
-    native.showAlert( "Spike Survivor Game","Avoid the falling red vermin,pick as many stars to score", { "OK", "Learn More" }, onComplete)
- end
 
 
 -- -----------------------------------------------------------------------------------
@@ -41,77 +31,41 @@ function scene:create( event )
    gameTitle.y = 70
 
    local spike = display.newImageRect( sceneGroup,"image/red_vermin.png",100,100)
-   spike.x = display.contentCenterX - 100
-   spike.y = 260
+   spike.x = display.contentCenterX - 120
+   spike.y = 270
    local spike = display.newImageRect( sceneGroup,"image/red_vermin.png",100,100)
-   spike.x = display.contentCenterX + 90
-   spike.y = 290
+   spike.x = display.contentCenterX + 120
+   spike.y = 320
    local spike = display.newImageRect( sceneGroup,"image/red_vermin.png",100,100)
    spike.x = display.contentCenterX
-   spike.y = 310
+   spike.y = 350
   
+   local levelScreen
 
-
-   -- Create the widgets
-local about = widget.newButton(
+   -- Create the widget
+local level = widget.newButton(
     {
-        label = "ABOUT",
+        label = "LEVELS",
         --onEvent = handleButtonEvent,
         emboss = false,
         -- Properties for a rounded rectangle button
         shape = "roundedRect",
-        width = 80,
-        height = 70,
-        cornerRadius = 10,
+        width = 180,
+        height = 40,
+        cornerRadius = 20,
         fillColor = { default={0,0,1,0.5}, over={1,0.1,0.7,0.4} },
         strokeColor = { default={0,0.4,1,0.5}, over={0.8,0.8,1,1} },
-        --fillColor = { default={1,0,0,1}, over={1,0.1,0.7,0.4} },
-        --strokeColor = { default={1,0.4,0,1}, over={0.8,0.8,1,1} },
-        strokeWidth = 4
+        strokeWidth = 2
     }
 )
-about.x = display.contentCenterX - 100
-about.y = 410
+level.x = display.contentCenterX
+level.y = 390
 
-local easy = widget.newButton(
-    {
-        label = "EASY",
-        --onEvent = handleButtonEvent,
-        emboss = false,
-        -- Properties for a rounded rectangle button
-        shape = "roundedRect",
-        width = 80,
-        height = 70,
-        cornerRadius = 10,
-        fillColor = { default={0,0,1,0.5}, over={1,0.1,0.7,0.4} },
-        strokeColor = { default={0,0.4,1,0.5}, over={0.8,0.8,1,1} },
-        strokeWidth = 4
-    }
-)
-easy.x = display.contentCenterX
-easy.y = 410
+levelScreen = function()
+    composer.gotoScene( "levels", { time=800, effect="crossFade" } )
+end 
 
-local difficult = widget.newButton(
-    {
-        label = "DIFFICULT",
-        --onEvent = handleButtonEvent,
-        emboss = false,
-        -- Properties for a rounded rectangle button
-        shape = "roundedRect",
-        width = 80,
-        height = 70,
-        cornerRadius = 10,
-        fillColor = { default={0,0,1,0.5}, over={1,0.1,0.7,0.4} },
-        strokeColor = { default={0,0.4,1,0.5}, over={0.8,0.8,1,1} },
-        strokeWidth = 4
-    }
-)
-difficult.x = display.contentCenterX + 100
-difficult.y = 410
-
-   about:addEventListener("tap",aboutGame)
-   easy:addEventListener("tap",easyLevel)
-   difficult:addEventListener("tap",difficultLevel)
+level:addEventListener( "tap", levelScreen)  
 
 end--end of create scene
 
@@ -120,7 +74,7 @@ function scene:destroy( event )
     
        local sceneGroup = self.view
        -- Code here runs prior to the removal of scene's view
-      
+       
    end
 
 -- -----------------------------------------------------------------------------------

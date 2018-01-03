@@ -30,10 +30,10 @@ function scene:create( event )
 
     Random = math.random
 
-    spikesTable = {}
+    enemiesTable = {}
 
     music = audio.loadSound("sound/music.mp3")
-   moveSound = audio.loadSound( "sound/balloonPop.mp3" )
+    moveSound = audio.loadSound( "sound/balloonPop.mp3" )
 
     --score display
     score = 0
@@ -57,9 +57,9 @@ function scene:create( event )
     --player sprite
     player = display.newImageRect("image/smile1.png",50,50)
     player.x = display.contentCenterX
-    player.y = 420
+    player.y = 410
 
-    -- Create the widget
+    -- Create the player control widget
 left = widget.newButton(
     {
         label = "left",
@@ -67,17 +67,17 @@ left = widget.newButton(
         emboss = false,
         -- Properties for a rounded rectangle button
         shape = "circle",
-        radius = 20,
+        radius = 25,
         fillColor = { default={0,0,1,0.5}, over={1,0.1,0.7,0.4} },
         strokeColor = { default={0,0.4,1,0.5}, over={0.8,0.8,1,1} },
         strokeWidth = 4
     }
 )
---position button
-left.x = 50
-left.y = 460
+--position the move button
+left.x = 130
+left.y = 470
 
--- Create the widget
+-- Create the player control widget
 right = widget.newButton(
     {
         label = "right",
@@ -85,81 +85,86 @@ right = widget.newButton(
         emboss = false,
         -- Properties for a rounded rectangle button
         shape = "circle",
-        radius = 20,
+        radius = 25,
         fillColor = { default={0,0,1,0.5}, over={1,0.1,0.7,0.4} },
         strokeColor = { default={0,0.4,1,0.5}, over={0.8,0.8,1,1} },
         strokeWidth = 4
     }
 )
 --position button
-right.x = 280
-right.y = 460
+right.x = 200
+right.y = 470
 
-    
-end--end of create scene
---------------------------------
 --move player
 function moveRight()
     audio.play(moveSound)
-    transition.moveBy(player, { x=25,time=100})
+    transition.moveBy(player, { x=25,time=200})
     score = score + 1
     scoreDisplay.text = "score:"..score
 end
 
 function moveLeft()
     audio.play(moveSound)
-    transition.moveBy(player, { x=-25,time=100})
+    transition.moveBy(player, { x=-25,time=200})
     score = score + 1
     scoreDisplay.text = "score:"..score
 end
 
 
-local function createSpike()
- 
-    local spike = display.newImageRect("image/red_vermin.png",60,60)
-    spike.x = display.contentCenterX
-    spike.y = -10
-    table.insert( spikesTable, spike )
-    physics.addBody( spike, "dynamic")
-    spike.myName = "spike"
 
-    local whereFrom = Random( 6 )
+    
+end--end of create scene
+--------------------------------
+local function spawnEnemies()
+ 
+    enemy = display.newImageRect("image/red_vermin.png",60,60)
+    enemy.x = display.contentCenterX
+    enemy.y = - 60
+    table.insert( enemiesTable, enemy )
+    physics.addBody( enemy, "dynamic")
+    enemy.myName = "vermin"
+
+    local whereFrom = Random( 4 )
 
     if ( whereFrom == 1 ) then
-        -- From the left
-        spike.x = Random( display.contentWidth )
-        --.y = math.random( 500 )
-        --newAsteroid:setLinearVelocity( math.random( 40,120 ), math.random( 20,60 ) )
+        
+        enemy.x = Random( display.contentWidth )
     elseif ( whereFrom == 2 ) then
-        -- From the top
-        spike.x = Random( display.contentWidth ) - 33
-        --newAsteroid.y = -60
-        --newAsteroid:setLinearVelocity( math.random( -40,40 ), math.random( 40,120 ) )
+        
+        enemy.x = Random( display.contentWidth ) - 33
+        
     elseif ( whereFrom == 3 ) then
-        -- From the right
-        spike.x = Random(display.contentWidth) + 53
+        
+        enemy.x = Random(display.contentWidth) + 53
+
     elseif ( whereFrom == 4 ) then
-        spike.x = Random( display.contentWidth) - 12    
+        enemy.x = Random( display.contentWidth) - 12    
     
-    elseif ( whereFrom == 5 ) then
-        spike.x = Random(display.contentWidth) + 45
+    --[[elseif ( whereFrom == 5 ) then
+        enemy.x = Random(display.contentWidth) + 45
+
     elseif ( whereFrom == 6 ) then
-        spike.x = Random(display.contentWidth) - 5            
+        enemy.x = Random(display.contentWidth) - 5 --]]           
     end
-end--end of createSpike
+end--end of spawnEnemies
+
+
+
 ------------------------------
---collision
-local function onStarCollision( self, event )
- 
-    if ( event.phase == "began" ) then
-        display.remove(star)
- 
-    --elseif ( event.phase == "ended" ) then
-        --timer.performWithDelay( 3000, spawnStar, 2 )
-    end
-end
+
 
 --------------------------------
+function startGame()
+    --import physics engine and activate it
+    local physics = require( "physics" )
+    physics.start()
+
+    --background music
+    audio.play(music, {duration=30000})
+
+    --creates enemies every 1.5 seconds,infinitely
+    timer.performWithDelay( 1500, spawnEnemies, 0 )
+end
 -------------------------------- 
 -- show()
 function scene:show( event )
@@ -173,26 +178,14 @@ function scene:show( event )
     elseif ( phase == "did" ) then
         -- Code here runs when the scene is entirely on screen
 
-        --background music
-        audio.play(music, {duration=30000})
-
-        --import physics engine and activate it
-        local physics = require( "physics" )
-         physics.start()
+        startGame()
           
-        timer.performWithDelay( 3000, spawnStar, 0 )
-        
+        --timer.performWithDelay( 3000, spawnStar, 0 )
 
-        player.collision = onStarCollision
-        player:addEventListener( "collision" )
- 
-        star.collision = onStarCollision
-        star:addEventListener( "collision" )
+         
 
-         timer.performWithDelay( 1000, createSpike, 0 )
-
-        right:addEventListener("touch", moveRight)
-        left:addEventListener("touch", moveLeft)
+        right:addEventListener("tap", moveRight)
+        left:addEventListener("tap", moveLeft)
  
     end
 end--end of show scene
