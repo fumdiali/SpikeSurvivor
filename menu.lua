@@ -4,9 +4,17 @@ local widget = require( "widget" )
 local scene = composer.newScene()
 
 
-local function gameLevels()
-    composer.gotoScene( "gamelevels" )
-end 
+local function easyLevel()
+    composer.gotoScene( "easy", { time=800, effect="crossFade" } )
+ end
+ 
+ local function difficultLevel()
+     composer.gotoScene( "difficult", { time=800, effect="crossFade" } )
+  end
+ 
+  local function aboutGame()
+     native.showAlert( "Spike Survivor Game","Avoid the falling red vermin,pick as many stars to score", { "OK", "Learn More" }, onComplete)
+  end
 
 
 
@@ -28,44 +36,86 @@ function scene:create( event )
    gameImage.y = 150
    gameImage.rotation = 40
 
-   local gameTitle = display.newText( sceneGroup,"Spike Survivor", 100, 300, native.systemFont, 46 )
+   local gameTitle = display.newText( sceneGroup,"Doja!", 100, 300, native.systemFont, 86 )
    gameTitle:setFillColor( 0, 0, 1 )
    gameTitle.x = display.contentCenterX
    gameTitle.y = 70
 
-   local spike = display.newImageRect( sceneGroup,"image/red_vermin.png",100,100)
+   local spike = display.newImageRect( sceneGroup,"image/red_vermin.png",70,70)
    spike.x = display.contentCenterX - 120
-   spike.y = 270
-   local spike = display.newImageRect( sceneGroup,"image/red_vermin.png",100,100)
+   spike.y = 240
+   local spike = display.newImageRect( sceneGroup,"image/red_vermin.png",70,70)
    spike.x = display.contentCenterX + 120
-   spike.y = 320
-   local spike = display.newImageRect( sceneGroup,"image/red_vermin.png",100,100)
+   spike.y = 130
+   local spike = display.newImageRect( sceneGroup,"image/red_vermin.png",70,70)
    spike.x = display.contentCenterX
-   spike.y = 350
+   spike.y = 290
   
 
-   -- Create the widget
-local level = widget.newButton(
+   local easy = widget.newButton(
     {
-        label = "GAME LEVELS",
+        label = "EASY",
         --onEvent = handleButtonEvent,
         emboss = false,
         -- Properties for a rounded rectangle button
         shape = "roundedRect",
-        width = 190,
+        width = 280,
         height = 40,
         cornerRadius = 20,
         fillColor = { default={0,0,1,0.5}, over={1,0.1,0.7,0.4} },
         strokeColor = { default={0,0.4,1,0.5}, over={0.8,0.8,1,1} },
-        strokeWidth = 2
+        strokeWidth = 4
     }
 )
-level.x = display.contentCenterX
-level.y = 390
+easy.x = display.contentCenterX
+easy.y = 320
+
+local difficult = widget.newButton(
+    {
+        label = "DIFFICULT",
+        --onEvent = handleButtonEvent,
+        emboss = false,
+        -- Properties for a rounded rectangle button
+        shape = "roundedRect",
+        width = 280,
+        height = 40,
+        cornerRadius = 20,
+        fillColor = { default={0,0,1,0.5}, over={1,0.9,0.4,0.4} },
+        strokeColor = { default={0,0.4,1,0.5}, over={0.8,0.8,1,1.5} },
+        strokeWidth = 4
+    }
+)
+difficult.x = display.contentCenterX
+difficult.y = 370
+  
+
+
+   -- Create the widgets
+local about = widget.newButton(
+    {
+        label = "ABOUT",
+        --onEvent = handleButtonEvent,
+        emboss = false,
+        -- Properties for a rounded rectangle button
+        shape = "roundedRect",
+        width = 280,
+        height = 40,
+        cornerRadius = 20,
+        fillColor = { default={0,0,1,0.5}, over={1,0.1,0.7,0.4} },
+        strokeColor = { default={0,0.4,1,0.5}, over={0.8,0.8,1,1} },
+        --fillColor = { default={1,0,0,1}, over={1,0.1,0.7,0.4} },
+        --strokeColor = { default={1,0.4,0,1}, over={0.8,0.8,1,1} },
+        strokeWidth = 4
+    }
+)
+about.x = display.contentCenterX
+about.y = 420
 
 
 
-level:addEventListener( "tap", gameLevels)  
+about:addEventListener("tap",aboutGame)
+easy:addEventListener("tap",easyLevel)
+difficult:addEventListener("tap",difficultLevel) 
 
 end--end of create scene
 

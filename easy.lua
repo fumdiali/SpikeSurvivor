@@ -37,20 +37,25 @@ function scene:create( event )
 
     --score display
     score = 0
-    scoreDisplay = display.newText( "score:0", 160, 10, native.systemFont, 30 )
+    scoreDisplay = display.newText( "0", 160, 50, native.systemFont, 45 )
     scoreDisplay:setFillColor(1,1,1)
+
+    levelDisplay = display.newText("Level 1", 160, 20, native.systemFont, 20)
 
     star = display.newImageRect("image/gold_star.png",30,30)
 
     --to spawn prize token
     function spawnStar( event )
-        local starPos = Random( 2 )
+        local starPos = Random( 3 )
         if(starPos == 1) then
             star.x = 30
             star.y = 413
         elseif(starPos == 2) then
             star.x = 300 
             star.y = 413
+        elseif(starPos == 3) then
+            star.x = 160 
+            star.y = 413     
         end       
     end--end of star spawn
 
@@ -58,6 +63,7 @@ function scene:create( event )
     player = display.newImageRect("image/smile1.png",50,50)
     player.x = display.contentCenterX
     player.y = 410
+    player.myName = "player"
 
     -- Create the player control widget
 left = widget.newButton(
@@ -100,21 +106,23 @@ function moveRight()
     audio.play(moveSound)
     transition.moveBy(player, { x=25,time=200})
     score = score + 1
-    scoreDisplay.text = "score:"..score
+    scoreDisplay.text = ""..score
 end
 
 function moveLeft()
     audio.play(moveSound)
     transition.moveBy(player, { x=-25,time=200})
     score = score + 1
-    scoreDisplay.text = "score:"..score
+    scoreDisplay.text = ""..score
 end
 
 
 
     
 end--end of create scene
---------------------------------
+--------------------------------   
+  
+
 local function spawnEnemies()
  
     enemy = display.newImageRect("image/red_vermin.png",60,60)
@@ -149,7 +157,6 @@ local function spawnEnemies()
 end--end of spawnEnemies
 
 
-
 ------------------------------
 
 
@@ -159,11 +166,14 @@ function startGame()
     local physics = require( "physics" )
     physics.start()
 
+    
     --background music
     audio.play(music, {duration=30000})
 
     --creates enemies every 1.5 seconds,infinitely
     timer.performWithDelay( 1500, spawnEnemies, 0 )
+    --generate prize stars every 2 seconds
+    timer.performWithDelay( 1500, spawnStar, 0 )
 end
 -------------------------------- 
 -- show()
@@ -181,9 +191,7 @@ function scene:show( event )
         startGame()
           
         --timer.performWithDelay( 3000, spawnStar, 0 )
-
-         
-
+        
         right:addEventListener("tap", moveRight)
         left:addEventListener("tap", moveLeft)
  
